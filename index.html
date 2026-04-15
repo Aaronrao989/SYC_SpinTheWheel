@@ -28,9 +28,6 @@ body {
   cursor: default;
 }
 
-/* ===== POKEBALL CURSOR ===== */
-*, *::before, *::after { box-sizing: border-box; }
-
 /* ===== ANIMATED BG ===== */
 .bg-stars {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -319,21 +316,27 @@ section { position: relative; z-index: 1; padding: 5rem 2rem; }
 .wheel-wrapper {
   display: flex; gap: 3rem; align-items: flex-start; flex-wrap: wrap; justify-content: center;
 }
+
+/* FIX: Arrow on the RIGHT side of the wheel */
 .wheel-container {
   position: relative; flex-shrink: 0;
   display: flex; flex-direction: column; align-items: center;
 }
 .wheel-arrow {
   position: absolute;
-  top: -18px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 10;
   font-size: 2.5rem;
   filter: drop-shadow(0 4px 8px rgba(255,26,26,0.6));
   animation: arrowBounce 1s ease-in-out infinite;
+  line-height: 1;
 }
-@keyframes arrowBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-6px)} }
+@keyframes arrowBounce {
+  0%,100%{ transform: translateY(-50%) translateX(0); }
+  50%{ transform: translateY(-50%) translateX(-6px); }
+}
 
 canvas#wheel {
   border-radius: 50%;
@@ -574,6 +577,18 @@ footer .footer-logo {
   .nav-links { display: none; }
   .hero h1 { font-size: clamp(3rem, 14vw, 6rem); }
   canvas#wheel { width: 280px !important; height: 280px !important; }
+  /* On mobile, arrow goes back to top since layout stacks */
+  .wheel-arrow {
+    right: auto;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: arrowBounceTop 1s ease-in-out infinite;
+  }
+  @keyframes arrowBounceTop {
+    0%,100%{ transform: translateX(-50%) translateY(0); }
+    50%{ transform: translateX(-50%) translateY(-6px); }
+  }
 }
 
 /* ===== SCROLL ANIMATIONS ===== */
@@ -650,8 +665,8 @@ footer .footer-logo {
 
   <div class="about-grid" style="max-width:1100px;margin:0 auto;">
     <div class="about-text reveal">
-      <p>The <span class="highlight">Student Welfare Department</span>, in association with <span class="red">Sanjeevani & Yoga Club</span>, is back with <span class="highlight">WALKATHON 2.0 – The 10-Day Elite Grind!</span></p>
-      <p>After the massive success of last year's Walkathon, where <span class="highlight">484 participants</span> actively stepped towards a healthier lifestyle, we are excited to bring it back — <em>bigger, better, and without limits!</em></p>
+      <p>The <span class="highlight">Student Welfare Department</span>, in association with <span class="red">Sanjeevani &amp; Yoga Club</span>, is back with <span class="highlight">WALKATHON 2.0 – The 10-Day Elite Grind!</span></p>
+      <p>After the massive success of last year's Walkathon, where participants actively stepped towards a healthier lifestyle, we are excited to bring it back — <em>bigger, better, and without limits!</em></p>
       <p>Last year, due to certain foundational constraints, registrations were capped. But this time — <span class="red">no limits, just competition and consistency!</span></p>
       <p>Proudly initiated by <span class="highlight">S.Y.C.</span>, this is a <strong>one-of-its-kind fitness event in the NCR region.</strong> 💪</p>
       <p style="margin-top:1.5rem; padding: 1rem; background: rgba(255,215,0,0.08); border-left: 3px solid var(--poke-yellow); border-radius: 8px; font-size:0.9rem; color: rgba(255,255,255,0.7);">
@@ -662,7 +677,7 @@ footer .footer-logo {
     <div class="why-join reveal">
       <div class="why-item">
         <span class="why-icon">🧠</span>
-        <div class="why-text"><strong>Boost Fitness & Mental Clarity</strong>10 days of consistent movement for mind and body.</div>
+        <div class="why-text"><strong>Boost Fitness &amp; Mental Clarity</strong>10 days of consistent movement for mind and body.</div>
       </div>
       <div class="why-item">
         <span class="why-icon">🔥</span>
@@ -674,7 +689,7 @@ footer .footer-logo {
       </div>
       <div class="why-item">
         <span class="why-icon">🏆</span>
-        <div class="why-text"><strong>Exclusive Rewards</strong>Decathlon & Bata sponsor prizes, badges, and certificates.</div>
+        <div class="why-text"><strong>Exclusive Rewards</strong>Decathlon &amp; Bata sponsor prizes, badges, and certificates.</div>
       </div>
       <div class="why-item">
         <span class="why-icon">⚡</span>
@@ -693,7 +708,7 @@ footer .footer-logo {
   <div class="wheel-section reveal">
     <div class="wheel-wrapper">
       <div class="wheel-container">
-        <div class="wheel-arrow">▼</div>
+        <div class="wheel-arrow">◀</div>
         <canvas id="wheel" width="340" height="340"></canvas>
         <button class="spin-btn" id="spinBtn" onclick="spinWheel()">⚡ SPIN!</button>
       </div>
@@ -753,7 +768,7 @@ footer .footer-logo {
 <!-- FOOTER -->
 <footer>
   <span class="footer-logo">⚡ WALKATHON 2.0</span>
-  Sanjeevani & Yoga Club · ABESEC · 2026<br>
+  Sanjeevani &amp; Yoga Club · ABESEC · 2026<br>
   <span style="margin-top:0.5rem; display:block;">"Stretch Beyond Your Limits" — The Fitness Club of ABESEC</span>
   <a href="https://www.instagram.com/abes_syc/" target="_blank" style="color:var(--poke-yellow); text-decoration:none; font-weight:800; margin-top:0.8rem; display:inline-block;">📸 @abes_syc</a>
 </footer>
@@ -805,9 +820,6 @@ const arc = (2 * Math.PI) / numSegments;
 
 let currentAngle = 0;
 let spinning = false;
-let spinVelocity = 0;
-let targetAngle = 0;
-let rafId = null;
 
 function drawWheel(angle) {
   const cx = canvas.width / 2;
@@ -903,38 +915,36 @@ function spinWheel() {
     drawWheel(currentAngle);
 
     if (progress < 1) {
-      rafId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     } else {
       currentAngle = startAngle + totalAngle;
       drawWheel(currentAngle);
       spinning = false;
       document.getElementById('spinBtn').disabled = false;
+      
 
-      // Find winning segment
-      const normalizedAngle = ((-currentAngle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+      // Arrow is on the RIGHT side (pointing left = 0 radians = 3 o'clock position)
+      // So the winning segment is the one at angle 0 (rightmost point)
+      const arrowAngle = Math.PI / 12; // about 15° upward
+      const normalizedAngle = ((arrowAngle - currentAngle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
       const segIndex = Math.floor(normalizedAngle / arc) % numSegments;
       const winner = segments[segIndex];
-
-      showResult(winner);
-    }
+     showResult(winner);}
   }
 
   requestAnimationFrame(animate);
 }
 
 function showResult(seg) {
-  // Update inline result
   const display = document.getElementById('resultDisplay');
   display.className = 'result-display has-result';
   display.innerHTML = `<div class="result-emoji">${seg.emoji}</div><div class="result-text">${seg.label}</div>`;
 
-  // Show modal
   document.getElementById('modalEmoji').textContent = seg.emoji;
   document.getElementById('modalTitle').textContent = seg.label;
   const modal = document.getElementById('resultModal');
   modal.classList.add('show');
 
-  // Confetti
   launchConfetti(seg.color);
 }
 
