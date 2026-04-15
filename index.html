@@ -28,6 +28,9 @@ body {
   cursor: default;
 }
 
+/* ===== POKEBALL CURSOR ===== */
+*, *::before, *::after { box-sizing: border-box; }
+
 /* ===== ANIMATED BG ===== */
 .bg-stars {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -316,27 +319,22 @@ section { position: relative; z-index: 1; padding: 5rem 2rem; }
 .wheel-wrapper {
   display: flex; gap: 3rem; align-items: flex-start; flex-wrap: wrap; justify-content: center;
 }
-
-/* FIX: Arrow on the RIGHT side of the wheel */
 .wheel-container {
   position: relative; flex-shrink: 0;
   display: flex; flex-direction: column; align-items: center;
+  padding-right: 44px;
 }
 .wheel-arrow {
   position: absolute;
-  right: -28px;
+  right: -36px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
   font-size: 2.5rem;
   filter: drop-shadow(0 4px 8px rgba(255,26,26,0.6));
   animation: arrowBounce 1s ease-in-out infinite;
-  line-height: 1;
 }
-@keyframes arrowBounce {
-  0%,100%{ transform: translateY(-50%) translateX(0); }
-  50%{ transform: translateY(-50%) translateX(-6px); }
-}
+@keyframes arrowBounce { 0%,100%{transform:translateY(-50%) translateX(0)} 50%{transform:translateY(-50%) translateX(6px)} }
 
 canvas#wheel {
   border-radius: 50%;
@@ -577,18 +575,6 @@ footer .footer-logo {
   .nav-links { display: none; }
   .hero h1 { font-size: clamp(3rem, 14vw, 6rem); }
   canvas#wheel { width: 280px !important; height: 280px !important; }
-  /* On mobile, arrow goes back to top since layout stacks */
-  .wheel-arrow {
-    right: auto;
-    top: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: arrowBounceTop 1s ease-in-out infinite;
-  }
-  @keyframes arrowBounceTop {
-    0%,100%{ transform: translateX(-50%) translateY(0); }
-    50%{ transform: translateX(-50%) translateY(-6px); }
-  }
 }
 
 /* ===== SCROLL ANIMATIONS ===== */
@@ -614,7 +600,7 @@ footer .footer-logo {
   <div class="result-modal-card">
     <span class="modal-emoji" id="modalEmoji">🎉</span>
     <div class="modal-title" id="modalTitle">You got it!</div>
-    <div class="modal-sub" id="modalSub">Now you need to perform this activity, record it, and then either share it in our drive link or post it on Instagram by tagging us <a href="https://www.instagram.com/abes_syc/" target="_blank" style="color:var(--poke-yellow); font-weight:800; text-decoration:none;">@abes_syc</a> and @decathlonsportsindia.</div>
+    <div class="modal-sub" id="modalSub">Show this to a volunteer to claim your challenge!</div>
     <button class="modal-close" onclick="closeModal()">AWESOME! ✓</button>
   </div>
 </div>
@@ -647,9 +633,9 @@ footer .footer-logo {
   <div class="hero-tagline">"Stretch Beyond Your Limits"</div>
 
   <div class="hero-date">
-    <span>15 APR</span>
+    <span>10 APR</span>
     <span class="sep">→</span>
-    <span>24 APR, 2026</span>
+    <span>20 APR, 2026</span>
   </div>
 
   <div class="hero-cta">
@@ -663,7 +649,7 @@ footer .footer-logo {
   <div class="section-title reveal">ABOUT <span style="color:var(--poke-red)">THE EVENT</span></div>
   <div class="divider reveal"></div>
 
-  <div class="about-grid" style="max-width:1100px;margin:0 auto;">
+<div class="about-grid" style="max-width:1100px;margin:0 auto;">
     <div class="about-text reveal">
       <p>The <span class="highlight">Student Welfare Department</span>, in association with <span class="red">Sanjeevani &amp; Yoga Club</span>, is back with <span class="highlight">WALKATHON 2.0 – The 10-Day Elite Grind!</span></p>
       <p>After the massive success of last year's Walkathon, where participants actively stepped towards a healthier lifestyle, we are excited to bring it back — <em>bigger, better, and without limits!</em></p>
@@ -677,7 +663,7 @@ footer .footer-logo {
     <div class="why-join reveal">
       <div class="why-item">
         <span class="why-icon">🧠</span>
-        <div class="why-text"><strong>Boost Fitness &amp; Mental Clarity</strong>10 days of consistent movement for mind and body.</div>
+        <div class="why-text"><strong>Boost Fitness & Mental Clarity</strong>10 days of consistent movement for mind and body.</div>
       </div>
       <div class="why-item">
         <span class="why-icon">🔥</span>
@@ -689,7 +675,7 @@ footer .footer-logo {
       </div>
       <div class="why-item">
         <span class="why-icon">🏆</span>
-        <div class="why-text"><strong>Exclusive Rewards</strong>Decathlon &amp; Bata sponsor prizes, badges, and certificates.</div>
+        <div class="why-text"><strong>Exclusive Rewards</strong>Decathlon & Bata sponsor prizes, badges, and certificates.</div>
       </div>
       <div class="why-item">
         <span class="why-icon">⚡</span>
@@ -768,9 +754,8 @@ footer .footer-logo {
 <!-- FOOTER -->
 <footer>
   <span class="footer-logo">⚡ WALKATHON 2.0</span>
-  Sanjeevani &amp; Yoga Club · ABESEC · 2026<br>
+  Sanjeevani & Yoga Club · ABESEC · 2026<br>
   <span style="margin-top:0.5rem; display:block;">"Stretch Beyond Your Limits" — The Fitness Club of ABESEC</span>
-  <a href="https://www.instagram.com/abes_syc/" target="_blank" style="color:var(--poke-yellow); text-decoration:none; font-weight:800; margin-top:0.8rem; display:inline-block;">📸 @abes_syc</a>
 </footer>
 
 <script>
@@ -820,6 +805,9 @@ const arc = (2 * Math.PI) / numSegments;
 
 let currentAngle = 0;
 let spinning = false;
+let spinVelocity = 0;
+let targetAngle = 0;
+let rafId = null;
 
 function drawWheel(angle) {
   const cx = canvas.width / 2;
@@ -915,36 +903,38 @@ function spinWheel() {
     drawWheel(currentAngle);
 
     if (progress < 1) {
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     } else {
       currentAngle = startAngle + totalAngle;
       drawWheel(currentAngle);
       spinning = false;
       document.getElementById('spinBtn').disabled = false;
-      
 
-      // Arrow is on the RIGHT side (pointing left = 0 radians = 3 o'clock position)
-      // So the winning segment is the one at angle 0 (rightmost point)
-      const arrowAngle = Math.PI / 12; // about 15° upward
-      const normalizedAngle = ((arrowAngle - currentAngle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+      // Find winning segment
+      const normalizedAngle = ((-currentAngle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
       const segIndex = Math.floor(normalizedAngle / arc) % numSegments;
       const winner = segments[segIndex];
-     showResult(winner);}
+
+      showResult(winner);
+    }
   }
 
   requestAnimationFrame(animate);
 }
 
 function showResult(seg) {
+  // Update inline result
   const display = document.getElementById('resultDisplay');
   display.className = 'result-display has-result';
   display.innerHTML = `<div class="result-emoji">${seg.emoji}</div><div class="result-text">${seg.label}</div>`;
 
+  // Show modal
   document.getElementById('modalEmoji').textContent = seg.emoji;
   document.getElementById('modalTitle').textContent = seg.label;
   const modal = document.getElementById('resultModal');
   modal.classList.add('show');
 
+  // Confetti
   launchConfetti(seg.color);
 }
 
